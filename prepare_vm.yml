@@ -1,0 +1,39 @@
+---
+- hosts: vaje-vsi
+  remote_user: administrator
+  become: true
+  become_method: sudo
+  tasks:
+    - name: create directory
+      file:
+        path=/home/student/VirtualDrives
+        state=directory
+    - name: copy VM container
+      copy:
+        src=/home/ladisk/ExportedVirtualDrives/ElementaryOS.ova
+        dest=/home/student/VirtualDrives/ElementaryOS.ova
+        owner=administrator
+        group=administrator
+        mode="u=r,g=r,o=r"
+
+    - name: import VM
+      command: VBoxManage import ElementaryOS.ova
+      args:
+        chdir: /home/student/VirtualDrives/
+      become: true
+      become_user: student
+
+    - name: make VM disk immutable
+      command: chattr +i ElementaryOS*
+      args:
+        chdir: /home/student/VirtualBox VMs/Standard/
+      become: true
+      become_method: sudo
+
+    - name: set disk immutable
+      command: VBoxManage modifyhd XXX --type immutable
+      args:
+        chdir: /home/student/VirtualBox VMs/Standard/
+      become: true
+      become_user: student
+

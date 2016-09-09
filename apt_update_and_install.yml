@@ -1,0 +1,29 @@
+---
+- hosts: vaje-vsi
+  remote_user: administrator
+  become: true
+  become_method: sudo
+  tasks:
+
+    - name: add user
+      user:
+        name=student
+        password=$6$o44MAE6bjj$TKz1DzsVV6MrsPF8.6UnbqV5Pc7lif.YKHmk6Wg4jsjlqVmNWTRpVa5ghyOekSYJ8ou/Emnj.YP2XnokxI9Ev0
+
+    - name: add pycharm repo
+      apt_repository:
+        repo='ppa:mystic-mirage/pycharm'
+
+    - name: check for aptitude
+      apt: name=aptitude state=latest
+
+    - name: update system
+      apt:
+        update_cache=yes
+        upgrade=full
+
+    - name: install git pycharm and virtualbox
+      apt:
+        name=git-all state=present
+        name=pycharm-community state=present
+        name=virtualbox state=present

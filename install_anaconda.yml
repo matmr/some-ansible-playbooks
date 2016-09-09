@@ -1,0 +1,20 @@
+---
+- hosts: vaje-vsi
+  remote_user: administrator
+  become: true
+  become_user: student
+  tasks:
+
+    - name: download anaconda
+      get_url:
+        url: https://repo.continuum.io/archive/Anaconda3-4.1.1-Linux-x86_64.sh
+        dest: /home/student/Downloads/Anaconda3-4.1.1-Linux-x86_64.sh
+        mode: 0777
+
+    - name: install anaconda
+      shell: ./Anaconda3-4.1.1-Linux-x86_64.sh -b -p /home/student/anaconda3/
+      args:
+        chdir: /home/student/Downloads/
+
+    - name: activate environment
+      shell: . /home/student/.bashrc ~/anaconda3/bin/activate ~/anaconda3/
